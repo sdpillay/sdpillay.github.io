@@ -1,13 +1,63 @@
 ---
-title: "myWeb"
-author: "Sanjay Pillay"
-date: "11/9/2019"
 output: html_document
+fontsize: 40pt
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-My simple awesome web
+---
+---
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 20px;
+  }
+td {  /* Table  */
+  font-size: 8px;
+}
+h1.title {
+  font-size: 38px;
+  color: DarkRed;
+}
+h1 { /* Header 1 */
+  font-size: 28px;
+  color: DarkBlue;
+}
+h2 { /* Header 2 */
+    font-size: 22px;
+  color: DarkBlue;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+
+<img src="images/sanjay.jpg" style="width:25%; border:10px solid; margin-right: 20px" align="left">In the community I mentor and support scouts to build on their life skills. I volunteers at various events as Archery Range Officer and other community events/fundraisers for non-profit organizations.
+
+ 
+At home I spend time with my family, grilling and being outdoors, reading books, fixing house hold equipment and working on small home improvement projects.
+
+
+<img src="images/hero.png" style="width:25%; border:10px solid; margin-right: 20px" align="left">
+"Has anyone seen my glasses, I am missing them again?" and the unanimous reply from my family is always "Did you check with Hero?"
+
+
+Things I have acomplished: Winning against both of my kids at “words with friends”, solving the Rubik’s cube, get to 4096 at 2048 (a fun app if you have not tried it). I am a NRA Certified a Range Safety Officer, NFAA Certified Archery Instructor, Certified Enterprise Architect for J2EE Technology and have several patents granted and few more under review.
+
+
+Favorite Quote: “Many of life's failures are people who did not realize how close they were to success when they gave up” - Thomas A. Edison
+
+
+And no I am not the President yet!!!
+

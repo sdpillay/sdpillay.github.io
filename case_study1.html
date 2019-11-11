@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Sanjay Pillay &amp; Angelo Bravo" />
+
+
+<title>Case Study 1</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Sanjay Pillay!</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">This Is Me</a>
+</li>
+<li>
+  <a href="case_study1.html">Brewries A Case Study</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/sdpillay/ds_exercise">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Case Study 1</h1>
+<h2><a href="https://dds-app1.shinyapps.io/shinnyunit12/">Explore the data interactively</a></h2>
+<h4 class="author">Sanjay Pillay &amp; Angelo Bravo</h4>
+<h4 class="date">10/9/2019</h4>
+
+</div>
+
+
+<p>Importing Libraries</p>
+<pre class="r"><code>#uncomment below installpks command if running for the first time
+#install.packages(&quot;dplyr&quot;, &quot;naniar&quot;,&quot;mice&quot;,&quot;VIM&quot;,&quot;stringi&quot;,&quot;stringr&quot;.&quot;rvest&quot;,&quot;purrr&quot;,&quot;tidyverse&quot;,&quot;tidyr&quot;,&quot;ggthemes&quot;,&quot;plotly&quot;,&quot;ggplot2&quot;,&quot;reshape2&quot;,&quot;GGally&quot;,&quot;caret&quot;,&quot;class&quot;)
+library(dplyr) #join etc
+library(naniar) # check nulls
+library(mice) # imputing
+library(VIM) # view imputed datas
+library(stringi)
+library(stringr)
+library(rvest) #html_table, html_node
+library(purrr)
+library(tidyverse) # Data cleaning
+library(tidyr) # Data cleaning
+library(ggthemes) #Plotting
+library(plotly) #Plotting
+library(ggplot2) #Plotting
+library(reshape2) # melt
+library(GGally) # ggpairs
+library(caret) #Confution matrix
+library(class)
+library(caret)
+library(e1071)</code></pre>
+<p>Importing data and filling in missing data with mice package</p>
+<pre class="r"><code>#Read supplied data
+cdw = getwd()
+brewwriesData = read.csv(paste(getwd(),&quot;/data/&quot;,&quot;Breweries.csv&quot;, sep = &quot;&quot;),header = TRUE)
+beerData = read.csv(paste(getwd(),&quot;/data/&quot;,&quot;Beers.csv&quot;, sep = &quot;&quot;),header = TRUE)
+#Analyse the data
+gg_miss_var(beerData)</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
+<pre class="r"><code># about 58.3% of data are not missing any values
+# 40% of IBU and 2.6% of ABV are misisng values
+
+#Plot the missing value using mice package
+aggr_plot &lt;- aggr(beerData, col=c(&#39;navyblue&#39;,&#39;red&#39;), numbers=TRUE, sortVars=TRUE, labels=names(beerData), cex.axis=.7, gap=3, ylab=c(&quot;Histogram of missing data&quot;,&quot;Pattern&quot;))</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-2-2.png" width="768" /></p>
+<pre><code>## 
+##  Variables sorted by number of missings: 
+##    Variable      Count
+##         IBU 0.41701245
+##         ABV 0.02572614
+##        Name 0.00000000
+##     Beer_ID 0.00000000
+##  Brewery_id 0.00000000
+##       Style 0.00000000
+##      Ounces 0.00000000</code></pre>
+<pre class="r"><code># left box plot to distribution of AVB with and without misisng IBU ,Right shows there are no IBU observations where ABV is missing
+marginplot(beerData[c(&#39;IBU&#39;,&#39;ABV&#39;)])</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-2-3.png" width="768" /></p>
+<pre class="r"><code>#Summary data
+summary(brewwriesData)</code></pre>
+<pre><code>##     Brew_ID                           Name           City    
+##  Min.   :  1.0   Blackrocks Brewery     :  2   Portland: 17  
+##  1st Qu.:140.2   Blue Mountain Brewery  :  2   Boulder :  9  
+##  Median :279.5   Lucette Brewing Company:  2   Chicago :  9  
+##  Mean   :279.5   Oskar Blues Brewery    :  2   Seattle :  9  
+##  3rd Qu.:418.8   Otter Creek Brewing    :  2   Austin  :  8  
+##  Max.   :558.0   Sly Fox Brewing Company:  2   Denver  :  8  
+##                  (Other)                :546   (Other) :498  
+##      State    
+##   CO    : 47  
+##   CA    : 39  
+##   MI    : 32  
+##   OR    : 29  
+##   TX    : 28  
+##   PA    : 25  
+##  (Other):358</code></pre>
+<pre class="r"><code>summary(beerData)</code></pre>
+<pre><code>##                      Name         Beer_ID            ABV         
+##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100  
+##  Dale&#39;s Pale Ale       :   6   1st Qu.: 808.2   1st Qu.:0.05000  
+##  Oktoberfest           :   6   Median :1453.5   Median :0.05600  
+##  Longboard Island Lager:   4   Mean   :1431.1   Mean   :0.05977  
+##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2075.8   3rd Qu.:0.06700  
+##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800  
+##  (Other)               :2376                    NA&#39;s   :62       
+##       IBU           Brewery_id                               Style     
+##  Min.   :  4.00   Min.   :  1.0   American IPA                  : 424  
+##  1st Qu.: 21.00   1st Qu.: 94.0   American Pale Ale (APA)       : 245  
+##  Median : 35.00   Median :206.0   American Amber / Red Ale      : 133  
+##  Mean   : 42.71   Mean   :232.7   American Blonde Ale           : 108  
+##  3rd Qu.: 64.00   3rd Qu.:367.0   American Double / Imperial IPA: 105  
+##  Max.   :138.00   Max.   :558.0   American Pale Wheat Ale       :  97  
+##  NA&#39;s   :1005                     (Other)                       :1298  
+##      Ounces     
+##  Min.   : 8.40  
+##  1st Qu.:12.00  
+##  Median :12.00  
+##  Mean   :13.59  
+##  3rd Qu.:16.00  
+##  Max.   :32.00  
+## </code></pre>
+<pre class="r"><code># Deal with missing values
+# We will get all missing vars to build the predictorMatrix to be passed to mice
+missVars &lt;- names(beerData)[colSums(is.na(beerData)) &gt; 0]
+
+#Get all the variables names in the dataset
+allVars &lt;- names(beerData)
+#Code borrwoed from https://rpubs.com/kaz_yos/mice-exclude
+#Initialize the matrix witl all row  column having th evar names form above
+predictorMatrix &lt;- matrix(0, ncol = length(allVars), nrow = length(allVars))
+rownames(predictorMatrix) &lt;- allVars
+colnames(predictorMatrix) &lt;- allVars
+
+#List the variables we want to be used for the calculations
+imputerVars &lt;- c(&quot;ABV&quot;,&quot;IBU&quot;,&quot;Style&quot;)
+
+## Keep variables that actually exist in dataset
+imputerVars &lt;- intersect(unique(imputerVars), allVars)
+imputerMatrix &lt;- predictorMatrix
+imputerMatrix[,imputerVars] &lt;- 1
+
+#Specify variables to be imputed
+imputedOnlyVars &lt;- c(&quot;ABV&quot;,&quot;IBU&quot;)
+imputedVars &lt;- intersect(unique(c(imputedOnlyVars, imputerVars)), missVars)
+
+imputedMatrix &lt;- predictorMatrix
+imputedMatrix[imputedVars,] &lt;- 1
+
+predictorMatrix &lt;- imputerMatrix * imputedMatrix
+
+## Diagonals must be zeros (a variable cannot impute itself)
+diag(predictorMatrix) &lt;- 0
+
+#Matrix to feed mice call
+predictorMatrix</code></pre>
+<pre><code>##            Name Beer_ID ABV IBU Brewery_id Style Ounces
+## Name          0       0   0   0          0     0      0
+## Beer_ID       0       0   0   0          0     0      0
+## ABV           0       0   0   1          0     1      0
+## IBU           0       0   1   0          0     1      0
+## Brewery_id    0       0   0   0          0     0      0
+## Style         0       0   0   0          0     0      0
+## Ounces        0       0   0   0          0     0      0</code></pre>
+<pre class="r"><code>#Generate 5 sets using 50 iterations using pnm (Predictive mean matching) method
+#imputedBeer = mice(beerData,m=5,maxit=50,meth=&#39;pmm&#39;,seed=500, predictorMatrix = predictorMatrix)</code></pre>
+<p>Visualizng Imputed Dataset</p>
+<pre class="r"><code>#mice density polt
+densityplot(imputedBeer,IBU~ABV|.imp)</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-1.png" width="768" /></p>
+<pre class="r"><code>completedData = mice::complete(imputedBeer,1)
+xyplot(imputedBeer,ABV ~ IBU)</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-2.png" width="768" /></p>
+<pre class="r"><code>xyplot(beerData$ABV ~ beerData$IBU,data =beerData)</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-3.png" width="768" /></p>
+<pre class="r"><code>###1 How many Brueries in each state
+brewwriesData %&gt;%  count(State)</code></pre>
+<pre><code>## # A tibble: 51 x 2
+##    State     n
+##    &lt;fct&gt; &lt;int&gt;
+##  1 &quot; AK&quot;     7
+##  2 &quot; AL&quot;     3
+##  3 &quot; AR&quot;     2
+##  4 &quot; AZ&quot;    11
+##  5 &quot; CA&quot;    39
+##  6 &quot; CO&quot;    47
+##  7 &quot; CT&quot;     8
+##  8 &quot; DC&quot;     1
+##  9 &quot; DE&quot;     2
+## 10 &quot; FL&quot;    15
+## # … with 41 more rows</code></pre>
+<pre class="r"><code>beerBrewries = merge(completedData, brewwriesData, by.x = &quot;Brewery_id&quot;, by.y = &quot;Brew_ID&quot;)
+head(beerBrewries,6)</code></pre>
+<pre><code>##   Brewery_id        Name.x Beer_ID   ABV IBU
+## 1          1  Get Together    2692 0.045  50
+## 2          1 Maggie&#39;s Leap    2691 0.049  26
+## 3          1    Wall&#39;s End    2690 0.048  19
+## 4          1       Pumpion    2689 0.060  38
+## 5          1    Stronghold    2688 0.060  25
+## 6          1   Parapet ESB    2687 0.056  47
+##                                 Style Ounces             Name.y
+## 1                        American IPA     16 NorthGate Brewing 
+## 2                  Milk / Sweet Stout     16 NorthGate Brewing 
+## 3                   English Brown Ale     16 NorthGate Brewing 
+## 4                         Pumpkin Ale     16 NorthGate Brewing 
+## 5                     American Porter     16 NorthGate Brewing 
+## 6 Extra Special / Strong Bitter (ESB)     16 NorthGate Brewing 
+##          City State
+## 1 Minneapolis    MN
+## 2 Minneapolis    MN
+## 3 Minneapolis    MN
+## 4 Minneapolis    MN
+## 5 Minneapolis    MN
+## 6 Minneapolis    MN</code></pre>
+<pre class="r"><code>tail(beerBrewries,6)</code></pre>
+<pre><code>##      Brewery_id                    Name.x Beer_ID   ABV IBU
+## 2405        556             Pilsner Ukiah      98 0.055  35
+## 2406        557  Heinnieweisse Weissebier      52 0.049   9
+## 2407        557           Snapperhead IPA      51 0.068  80
+## 2408        557         Moo Thunder Stout      50 0.049  15
+## 2409        557         Porkslap Pale Ale      49 0.043  42
+## 2410        558 Urban Wilderness Pale Ale      30 0.049  42
+##                        Style Ounces                        Name.y
+## 2405         German Pilsener     12         Ukiah Brewing Company
+## 2406              Hefeweizen     12       Butternuts Beer and Ale
+## 2407            American IPA     12       Butternuts Beer and Ale
+## 2408      Milk / Sweet Stout     12       Butternuts Beer and Ale
+## 2409 American Pale Ale (APA)     12       Butternuts Beer and Ale
+## 2410        English Pale Ale     12 Sleeping Lady Brewing Company
+##               City State
+## 2405         Ukiah    CA
+## 2406 Garrattsville    NY
+## 2407 Garrattsville    NY
+## 2408 Garrattsville    NY
+## 2409 Garrattsville    NY
+## 2410     Anchorage    AK</code></pre>
+<pre class="r"><code>## Media Alcohol/Bitterness for each state
+abByState = beerBrewries %&gt;% group_by(State) %&gt;% summarize(medianIBU = median(IBU), medianABV = median(ABV))
+abByState = abByState %&gt;% mutate(Bitterness = &#39;Middle&#39;) 
+abByState[which.max(abByState$medianIBU),]$Bitterness = &quot;Max&quot;
+abByState[which.min(abByState$medianIBU),]$Bitterness = &quot;Min&quot;
+abByState = abByState %&gt;% mutate(Alcohol = &#39;Middle&#39;) 
+abByState[which.max(abByState$medianABV),]$Alcohol = &quot;Max&quot;
+abByState[which.min(abByState$medianABV),]$Alcohol = &quot;Min&quot;
+
+#Comparision bar chart per state
+p =ggplot(abByState,aes(x = State,y = medianIBU)) + 
+    geom_bar(aes(fill = Bitterness),stat = &quot;identity&quot;) +
+  labs(title=&quot;Median bitterness by state&quot;, y = &quot;IBU&quot;, x=&quot;State&quot; ) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+p + theme(legend.position = &quot;top&quot;)</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-4.png" width="768" /></p>
+<pre class="r"><code>p =ggplot(abByState,aes(x = State,y = medianABV*100)) + 
+    geom_bar(aes(fill = Alcohol),stat = &quot;identity&quot;) +
+  labs(title=&quot;Median alcohol % content by state&quot;, y = &quot;ABV %&quot;, x=&quot;State&quot; ) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+p + theme(legend.position = &quot;top&quot;)</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-5.png" width="768" /></p>
+<pre class="r"><code>#Identify beer Categories by IPA//Ale/Other
+beerBrewries = beerBrewries %&gt;% mutate(bClass = &#39;Other&#39;) 
+beerBrewries = beerBrewries %&gt;% mutate(ABVpercent = ABV*100) 
+beerBrewries[grepl(&#39;IPA&#39;,beerBrewries$Style, ignore.case = TRUE),]$bClass = &quot;IPA&quot;
+beerBrewries[grepl(&#39;Ale&#39;,beerBrewries$Style, ignore.case = TRUE),]$bClass = &quot;Ale&quot;
+beerBrewries = beerBrewries %&gt;% mutate(bClass = as.factor(bClass)) 
+
+###6 ABV statistics
+summary(beerBrewries$ABVpercent)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.100   5.000   5.600   5.977   6.700  12.800</code></pre>
+<pre class="r"><code>beerBrewries %&gt;% ggplot(aes(x = bClass, y = ABVpercent)) + geom_boxplot() + labs(title=&quot;ABV % distribution by beer category&quot;, y = &quot;ABV %&quot;, x=&quot;Beer Category&quot; ) </code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-6.png" width="768" /></p>
+<pre class="r"><code>beerBrewries %&gt;% 
+ggplot(aes(x = log(ABVpercent), color = bClass)) + geom_histogram() + facet_grid(rows = vars(bClass))+ labs(title=&quot;ABV % distribution by beer category&quot;, y = &quot;Count&quot;, x=&quot;% ABV&quot; ) +theme_classic()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-7.png" width="768" /></p>
+<pre class="r"><code>###7 relation between ABV and IBU
+beerBrewries %&gt;% ggplot(aes(x = IBU, y = ABV)) + geom_point(aes(colour = bClass)) + labs(title=&quot;Relation of ABV vs IBU after including missing data&quot;, y = &quot;ABV&quot;, x=&quot;IBU&quot; ) </code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-8.png" width="768" /></p>
+<pre class="r"><code>beerBrewries %&gt;%  select( IBU, ABVpercent,bClass) %&gt;% ggpairs(aes(color = bClass))</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-4-9.png" width="768" /></p>
+<p>Preparing dataset for KNN Creating IPA/Ale only dataframe</p>
+<pre class="r"><code>#### Q 8 &amp; 9
+#Set up data for Training and test set 50/50
+ipa_ale_df &lt;- beerBrewries %&gt;% filter(bClass %in% c(&quot;IPA&quot;, &quot;Ale&quot;))
+ipa_df &lt;- beerBrewries %&gt;% filter(bClass %in% c(&quot;IPA&quot;))
+ale_df &lt;- beerBrewries %&gt;% filter(bClass %in% c(&quot;Ale&quot;))
+ipa_ale_df$bClass &lt;-  droplevels(ipa_ale_df$bClass)
+ipa_ale_df$bClass &lt;- factor(ipa_ale_df$bClass, levels = c(&quot;IPA&quot;, &quot;Ale&quot;))
+levels(ipa_ale_df$bClass)</code></pre>
+<pre><code>## [1] &quot;IPA&quot; &quot;Ale&quot;</code></pre>
+<pre class="r"><code>#removing ale,other levels
+ipa_df$bClass &lt;- droplevels(ipa_df$bClass)
+#adding ale level to ipa_df
+ipa_df$bClass &lt;- factor(ipa_df$bClass, levels = c(levels(ipa_df$bClass), &quot;Ale&quot;))
+#same process to ale_df
+ale_df$bClass &lt;- droplevels(ale_df$bClass)
+#adding ale level to ipa_df
+ale_df$bClass &lt;- factor(ale_df$bClass, levels = c(levels(ale_df$bClass), &quot;IPA&quot;))</code></pre>
+<p>Fitting 100 models for 100 Ks and getting the mean accuracy for each K We are trying to show that ABV and IBU is significantly different for IPAs and Ales by showing you can get more than 50% accuracy on a 50/50 split training set of IPAs and Ales.</p>
+<pre class="r"><code>#IPA,ALE VS IPA,ALE (50/50 split)
+set.seed(100)
+n = 1
+accuracydf &lt;- data.frame(accuracy = numeric(10000), k = numeric(10000), 
+                         sensitivity = numeric(10000), specificity = numeric(10000))
+for(i in 1:100) {
+  #Get dataset with evenly distributed IPAs and Ales (50/50)
+  ipa_test_ind &lt;- sample(1:nrow(ipa_df), nrow(ipa_df)-250)
+  ale_df_ind &lt;- sample(1:nrow(ale_df), 250)
+  #building train set
+  ipa_ale_train &lt;- rbind(ipa_df[-ipa_test_ind,], ale_df[ale_df_ind,])
+  ipa_ale_overall_test &lt;- ipa_ale_df[sapply(ipa_ale_df$Name.x, function(x) x %in% ipa_ale_train$Name.x) == FALSE,]
+  ipa_ale_test_ind &lt;- sample(1:nrow(ipa_ale_overall_test), round(.2 * nrow(ipa_ale_train)))
+  ipa_ale_test &lt;- ipa_ale_overall_test[ipa_ale_test_ind,]
+  
+  
+  #storing accuracy data in data frame
+  for(j in 1:100) {
+    classifications &lt;- knn(ipa_ale_train[c(&quot;ABV&quot;, &quot;IBU&quot;)], ipa_ale_test[c(&quot;ABV&quot;, &quot;IBU&quot;)], cl = ipa_ale_train$bClass, k = j, prob = F)
+    CM = confusionMatrix(table(classifications, ipa_ale_test$bClass))
+    accuracydf$accuracy[n] = CM$overall[1]
+    accuracydf$sensitivity[n] = CM$byClass[&quot;Sensitivity&quot;]
+    accuracydf$specificity[n] = CM$byClass[&quot;Specificity&quot;]
+    accuracydf$k[n] = j
+    n = n + 1
+  }
+}
+max(accuracydf$accuracy, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 0.94</code></pre>
+<pre class="r"><code>#accuracydf[accuracydf$accuracy == 0.91,]
+summary_acc_df &lt;- accuracydf %&gt;% group_by(k) %&gt;% summarise(mean_accuracy = mean(accuracy), 
+                                                           mean_sensitivity = mean(sensitivity),
+                                                           mean_specificity = mean(specificity, na.rm = T))
+overall_mean_accuracy &lt;- summary_acc_df[which.max(summary_acc_df$mean_accuracy),]
+#overall_mean_accuracy
+acc_df &lt;- as.data.frame(summary_acc_df)
+accuracydf %&gt;% ggplot(aes(x=k, y = accuracy)) + geom_point() + geom_smooth()</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-6-1.png" width="768" /></p>
+<pre class="r"><code>str(acc_df)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    100 obs. of  4 variables:
+##  $ k               : num  1 2 3 4 5 6 7 8 9 10 ...
+##  $ mean_accuracy   : num  0.837 0.836 0.849 0.851 0.857 ...
+##  $ mean_sensitivity: num  0.856 0.85 0.851 0.854 0.857 ...
+##  $ mean_specificity: num  0.829 0.83 0.847 0.85 0.857 ...</code></pre>
+<pre class="r"><code>library(ggthemes)
+acc_df %&gt;% ggplot(aes(x = k, y = mean_accuracy)) + geom_point() + geom_smooth() + theme_economist() + 
+  ggtitle(&quot;Mean Accuracy For 100 Iterations vs. K&quot;) + xlab(&quot;K&quot;) + ylab(&quot;Mean Accuracy&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-6-2.png" width="768" /></p>
+<p>We will now get ABV confidence intervals for IPAs and Ales</p>
+<pre class="r"><code>#run t-test two test if our overall_mean_accuracy is greater than 50
+#t.test
+#t.test(ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;IPA&quot;,], ipa_ale_df)
+plot(density(ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;IPA&quot;]))</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-7-1.png" width="768" /></p>
+<pre class="r"><code>hist(ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;IPA&quot;], col=rgb(1,0,0,0.5), xlim = range(.01,.15), main=&quot;Ale and IPA ABV Histogram&quot;,
+     xlab = &quot;ABV&quot;, ylab = &quot;Count&quot;)
+hist(ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;Ale&quot;], col=rgb(0,0,1,0.5), add=T)</code></pre>
+<p><img src="case_study1_files/figure-html/unnamed-chunk-7-2.png" width="768" /></p>
+<pre class="r"><code>#run a two-sample to test if the groups have significantly different ABVs
+t.test(ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;IPA&quot;], ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;Ale&quot;])</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  ipa_ale_df$ABV[ipa_ale_df$bClass == &quot;IPA&quot;] and ipa_ale_df$ABV[ipa_ale_df$bClass == &quot;Ale&quot;]
+## t = 19.467, df = 1040.3, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.01106448 0.01354505
+## sample estimates:
+##  mean of x  mean of y 
+## 0.06899104 0.05668627</code></pre>
+<pre class="r"><code>t.test(ipa_ale_df$IBU[ipa_ale_df$bClass==&quot;IPA&quot;], ipa_ale_df$IBU[ipa_ale_df$bClass==&quot;Ale&quot;])</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  ipa_ale_df$IBU[ipa_ale_df$bClass == &quot;IPA&quot;] and ipa_ale_df$IBU[ipa_ale_df$bClass == &quot;Ale&quot;]
+## t = 39.44, df = 1073.6, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  36.43548 40.25067
+## sample estimates:
+## mean of x mean of y 
+##  71.68817  33.34510</code></pre>
+<pre class="r"><code>#run a ttest on each group in order to determine a 95% CI of abv for each group
+t.test(ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;IPA&quot;])</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  ipa_ale_df$ABV[ipa_ale_df$bClass == &quot;IPA&quot;]
+## t = 130.79, df = 557, p-value &lt; 2.2e-16
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  0.06795492 0.07002716
+## sample estimates:
+##  mean of x 
+## 0.06899104</code></pre>
+<pre class="r"><code>t.test(ipa_ale_df$ABV[ipa_ale_df$bClass==&quot;Ale&quot;])</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  ipa_ale_df$ABV[ipa_ale_df$bClass == &quot;Ale&quot;]
+## t = 162.78, df = 1019, p-value &lt; 2.2e-16
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  0.05600293 0.05736962
+## sample estimates:
+##  mean of x 
+## 0.05668627</code></pre>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
