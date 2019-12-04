@@ -7,9 +7,11 @@ navbar:
       href: index.html
     - text: "Brewries A Case Study"
       href: case_study1.html
+    - text: "Talent Mgmt Case Study"
+      href: case_study2.html      
   right:
     - icon: fa-github fa-lg
-      href: https://github.com/sdpillay/ds_exercise
+      href: https://github.com/sdpillay/dds_casestudy2
 output:
   html_document:
     theme: paper
