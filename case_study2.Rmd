@@ -1,0 +1,496 @@
+---
+html_document: default
+author: "Sanjay Pillay"
+date: "11/21/2019"
+output: 
+  html_document: 
+    fig_width: 8
+title: "Talent Management Solution Case Study"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Introduction
+The following code consists of the Exploratory Data Analysis conducted by DDSDataAnalytics for the Talent Manangement solution for Frito Lays. The Exploratory Data Analysis takes a look at key Attrition Trends and Factors leading to it. It also evaluates three models for classification of Employee Attrition prediction and uses the best to predict it, it also evaluates a linear regression based model for predicting salary.
+
+# Video Presentation
+https://youtu.be/YyV7khyARWc
+
+# Shinny App
+https://dds-app1.shinyapps.io/shinny2/
+
+# GitHubIo
+https://sdpillay.github.io/
+
+# GitHub repo
+https://github.com/sdpillay/dds_casestudy2
+
+## Predicted Classification & Income file Location
+   GitHubRepo../data/Case2PredictionsSanjayPillayAttrition.csv Predicted Attrition
+   GitHubRepo../data/Case2PredictionsSanjayPillaySalary.csv Predicted Salary
+
+## Importing Libraries
+```{r message=FALSE}
+#uncomment below installpks command if running for the first time
+#install.packages("dplyr", "naniar","mice","VIM","stringi","stringr"."rvest","purrr","tidyverse","tidyr","ggthemes","plotly","ggplot2","reshape2","GGally","caret","class","e1071","hexbin","car","scatterplot3d","randomForest","multcomp","broom")
+library(dplyr) #join etc
+library(plyr)
+library(naniar) # check nulls
+library(mice) # imputing
+library(VIM) # view imputed datas
+library(stringi)
+library(stringr)
+library(rvest) #html_table, html_node
+library(purrr)
+library(tidyverse) # Data cleaning
+library(tidyr) # Data cleaning
+library(ggthemes) #Plotting
+library(plotly) #Plotting
+library(ggplot2) #Plotting
+library(reshape2) # melt
+library(GGally) # ggpairs
+library(caret) #Confution matrix
+library(class)
+library(caret)
+library(e1071)
+library(hexbin)
+library(car)
+library(scatterplot3d)
+library(randomForest)
+library("multcomp")
+library(broom)
+```
+
+# Set of common model validation methods
+```{r}
+
+#Lets add a binned column for Age, percenatage pay difference betweer employees pay vs the market monthly rate
+fixData <- function(data){
+#for graphs
+data = data %>% mutate(deptx = factor(data$Department, levels = c("Research & Development","Sales","Human Resources")))
+
+data = data %>% mutate(fjl = as.factor(JobLevel), 
+                       fyc = as.factor(YearsAtCompany),
+                       fycr = as.factor(YearsInCurrentRole), 
+                       ftrg = as.factor(TrainingTimesLastYear),
+                       fylp = as.factor(YearsSinceLastPromotion),
+                                       bes = cut(EnvironmentSatisfaction, 
+                                                 breaks=c(1,2,3,4,5), include.lowest=TRUE,  
+                            right=FALSE,  labels=c( "1","2","3","4")),
+                       byc = cut(YearsAtCompany, 
+                                                 breaks=c(0,3,6,10,15,30,40), include.lowest=TRUE,  
+                            right=FALSE,  labels=c(  
+                                        "0-3","3-6","6-10","10-15","15-30","30-40")),
+                            bwy = cut(TotalWorkingYears, 
+                                                 breaks=c(0, 5, 10, 15, 20, 25, 30,40), include.lowest=TRUE,  
+                            right=FALSE,  labels=c("0~5", "5~10", 
+                                        "10~15","15~20","20~25","25~30","30~40")),
+                            bdist = cut(DistanceFromHome, breaks=c(0, 5, 10, 15, 
+                                20, 25,30), include.lowest=TRUE,  
+                            right=FALSE,  labels=c("0~5", "5~10", 
+                                        "10~15","15~20","20~25","25~30"))
+                            ,
+                            bedu = cut(Education, 
+                                                 breaks=c(1,2,3,4,5,6), include.lowest=TRUE,  
+                            right=FALSE,  labels=c( "1", 
+                                        "2","3","4","5")),
+                            bwy = cut(TotalWorkingYears, 
+                                                 breaks=c(0,5, 10, 15, 20, 25, 30,40), include.lowest=TRUE,  
+                            right=FALSE,  labels=c("0~5", "5~10", 
+                                        "10~15","15~20","20~25","25~30","30~40")),
+                            bdist = cut(DistanceFromHome, breaks=c(0, 5, 10, 15, 
+                                20, 25,30), include.lowest=TRUE,  
+                            right=FALSE,  labels=c("0~5", "5~10", 
+                                        "10~15","15~20","20~25","25~30"))
+                            ,
+                            bage = cut(Age, breaks=c(18, 25, 30, 35, 
+                                40, 45,50, 60), include.lowest=TRUE,  
+                            right=FALSE,  labels=c("18~25", "25~30", 
+                                        "30~35","35~40","40~45","45~50","50~60"))
+                            ,ppayd = (((MonthlyIncome - MonthlyRate)/MonthlyRate)*100),
+                       bpayd = cut(ppayd, breaks=c(-100, -90 ,-80, -70, -60, -50, -40, -30, 
+                            -20, -10, 0, 50, 100, 500, 2000), include.lowest=TRUE,  
+                            right=FALSE,  labels=c("-90", "-80",  "-70", "-60", "-50", 
+                                                   "-40", "-30",
+                            "-20","-10","0","50","100","500","2000")))
+  return (data)
+}
+
+# Methods to get optimal k, check knn/NB accuracys
+## Common Tunig k hyperparam function
+# pass cv=1(split validation is default); 2(leave 1 out validation), numk to evaluate(default = 10), iteration to test(default = 20), data split percentage(default .75), data to tune on, explanatory names, dependant variable, plot (TRUE: print plot output)
+tuneK <- function(cv=0,numksF =10, numksT =20, iterations=20, splitPerc=.75, tuningData, cExplanotry, dependentVariable, plot = FALSE){
+  masterAcc = 0
+  ks = numksT-numksF
+  PmasterAcc = matrix(nrow = iterations, ncol = ks)
+  masterk = 0
+  #splitPerc = .8
+  result = 0
+  oldA = .0
+  
+  for(j in 1:iterations)
+  {
+
+    trainInd = sample(1:dim(tuningData)[1],round(splitPerc * dim(tuningData)[1]))
+    train = tuningData[trainInd,]
+    test = tuningData[-trainInd,]
+    #eval(substitute(dependentVariable), train)
+    for(i in 1:ks)
+    {
+      
+      if (cv==1){
+        classifications = knn.cv(tuningData[,cExplanotry], 
+                                 eval(substitute(dependentVariable), tuningData), 
+                                 prob = TRUE, k=i+numksF)
+        CM = confusionMatrix(table(classifications, eval(substitute(dependentVariable), 
+                                                         tuningData) ))
+
+      }else{
+        classifications = knn(train[,cExplanotry],test[,cExplanotry], 
+                            eval(substitute(dependentVariable), train),
+                            prob = TRUE, k=i+numksF)
+        CM = confusionMatrix(table(classifications,eval(substitute(dependentVariable), test)))
+      }
+      PmasterAcc[j,i] = CM$byClass["Specificity"]
+      if (CM$byClass["Specificity"] > oldA)
+        {
+          masterk = i
+          masterAcc = CM$byClass["Specificity"] #CM$overall["Accuracy"]
+          #print(masterk)
+          # print(masterAcc)
+          oldA = CM$byClass["Specificity"] #CM$overall["Accuracy"]
+        }
+      #CM$overall[1]
+    }
+    
+  }
+  MeanAcc = colMeans(PmasterAcc)
+  result = which.max(MeanAcc)
+  # add kfrom offset
+  result = result + numksF
+  #print(max(MeanAcc))
+  if (plot){
+    plot(seq(1 + numksF,ks + numksF,1),MeanAcc, type = "l",main="Plot of Specificity vs k",
+        xlab="k value",
+        ylab="Specificity")
+    
+  }
+  print(result)
+  return(result)
+}
+
+#Method to get Random Forest Accuracy, use 20% of model for accuracy calculation
+checkRandomForest <- function(modelData, 
+                               cformula){
+  trainInd = sample(1:dim(modelData)[1],round(.8 * dim(modelData)[1]))
+  testData = modelData[trainInd,]
+  titanic_rf_v6 <- randomForest(cformula,
+                              data = modelData)
+  titanic_rf_v6
+  p = predict(titanic_rf_v6, newdata = testData)
+  CM = confusionMatrix(table(p ,
+                           testData$Attrition)) 
+  print(CM)
+  return (p)
+
+ }
+
+#Method to get Knn Accuracy
+checkKnnAccuracy <- function(k, iterations=20, modelData, 
+                               cExplanotry, dependentVariable){
+  accuracydf <- data.frame(accuracy = numeric(iterations), 
+                         sensitivity = numeric(iterations), specificity = numeric(iterations))
+  masterAcc = matrix(nrow = iterations)
+  for(j in 1:iterations)
+  {
+  
+      classifications = knn.cv(modelData[,cExplanotry], 
+                               eval(substitute(dependentVariable), modelData), 
+                               prob = TRUE, k)
+      CM = confusionMatrix(table(classifications, eval(substitute(dependentVariable), 
+                                                       modelData) ))
+
+      #masterAcc[j] = CM$overall[1]
+      accuracydf$accuracy[j] = CM$overall[1]
+      accuracydf$sensitivity[j] = CM$byClass["Sensitivity"]
+      accuracydf$specificity[j] = CM$byClass["Specificity"]
+      #print(CM)
+ 
+  }
+  #accuracydf[accuracydf$accuracy == 0.91,]
+  summary_acc_df <- accuracydf %>% summarise(mean_accuracy = mean(accuracy), 
+                mean_sensitivity = mean(sensitivity), mean_specificity = 
+                  mean(specificity, na.rm = T))
+  print(summary_acc_df)
+ 
+}
+
+#Method to get NB Accuracy using loocv , use 20% of model for accuracy calculation
+checkNBAccuracy2 <- function( modelData, 
+                               formula){
+  trainInd = sample(1:dim(modelData)[1],round(.8 * dim(modelData)[1]))
+  testData = modelData[trainInd,]
+ 
+  model <- train(formula, method = "nb", data = modelData, trControl = trainControl(method = "cv"))
+
+ p = predict(model, newdata = testData)
+  CM = confusionMatrix(table(p ,
+                           testData$Attrition)) 
+  print(CM)
+  
+}
+
+#Method to get NB Accuracy 
+checkNBAccuracy <- function(iterations=20, splitPerc=.80, modelData, 
+                               cExplanotry, dependentVariable){
+  accuracydf <- data.frame(accuracy = numeric(iterations), 
+                         sensitivity = numeric(iterations), specificity = numeric(iterations))
+  masterAcc = matrix(nrow = iterations)
+  for(j in 1:iterations)
+  {
+      trainInd = sample(1:dim(modelData)[1],round(splitPerc * dim(modelData)[1]))
+      train = modelData[trainInd,]
+      test = modelData[-trainInd,]
+
+      model = naiveBayes(train[,cExplanotry], eval(substitute(dependentVariable), train), laplace = 3)
+      #table(predict(model,test[,c(1,2)]),test$Species)
+      CM = confusionMatrix(table(predict(model, test[,cExplanotry] ),
+                                 eval(substitute(dependentVariable), test) )) 
+      accuracydf$accuracy[j] = CM$overall[1]
+      accuracydf$sensitivity[j] = CM$byClass["Sensitivity"]
+      accuracydf$specificity[j] = CM$byClass["Specificity"]
+    }
+  summary_acc_df <- accuracydf %>% summarise(mean_accuracy = mean(accuracy), 
+                mean_sensitivity = mean(sensitivity), mean_specificity = 
+                  mean(specificity, na.rm = T))
+  print(summary_acc_df)
+    # print(CM)
+}
+```
+
+
+# Analysis
+```{r}
+#Read supplied data
+cdw = getwd()
+employeeData1 = read.csv(paste(getwd(),"/data/","CaseStudy2-data.csv", sep = ""),header = TRUE)
+testEmpDataSal = read.csv(paste(getwd(),"/data/","CaseStudy2CompSet No Salary.csv", sep = ""),header = TRUE)
+testEmpDataAttr = read.csv(paste(getwd(),"/data/","CaseStudy2CompSet No Attrition.csv", sep = ""),header = TRUE)
+
+#Check structure
+str(employeeData1)
+
+#Check Income distribution
+summary(employeeData1$MonthlyIncome)
+
+#Fix data to add bins etc using common method
+employeeData = fixData(employeeData1)
+
+#Export for testing Shinny app
+write_csv(employeeData, "ShinnyData.csv",append = FALSE)
+
+#Seperate Attrition vs non attrition
+empL = employeeData %>% filter(Attrition == "Yes")
+empW = employeeData %>% filter(Attrition == "No") 
+
+#Trend Analysis
+#Attritions based on Depatment
+empL %>% ggplot(aes(x=Department, fill=Attrition)) +
+  geom_histogram(stat='count') + labs(title="Attrition By Department", y = "Employee Count", x="Department" ) +geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count",
+        vjust = -.25)
+
+#Attritions based on Field
+empL %>% ggplot(aes(x=EducationField, fill=EducationField)) +
+  geom_histogram(stat='count') + labs(title="Attrition By Education Field", y = "Employee Count", x="Eduction Field" ) +geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count",
+        vjust = -.25)
+
+#Attritions based on Department / Field
+empL %>% ggplot(aes(x=EducationField, fill=deptx)) +
+  geom_histogram(stat='count') + labs(title="Attrition By Department/Education Field", y = "Employee Count", x="Education Field" ) +geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count",
+        vjust = -.25)
+
+#Attritions based on Education
+empL %>% ggplot(aes(x=bedu, fill=bedu)) +
+  geom_histogram(stat='count') + labs(title="Attrition By Education Years", y = "Employee Count", x="Eduction Years" , fill="Edu Yrs") +geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)
+
+#Attritions based on Education / Department
+empL = empL %>% mutate(deptx = factor(empL$Department, levels = c("Research & Development","Sales","Human Resources")))
+empL %>% ggplot(aes(x=bedu, fill=deptx)) +
+  geom_histogram(stat='count') + labs(title="Attrition By Education Years/Department", y = "Employee Count", x="Eduction Years" , fill="Department") + geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)
+
+#Factor 1 Attrition due to Stock Options Overall Graphs
+empL %>% ggplot(aes(x=StockOptionLevel, fill=Attrition)) +
+  geom_histogram(stat='count') + labs(title="Stock Options Impact On Attrition", y = "Employee Count", x="Stock Options" ) + geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)
+
+#Compare with existing employees
+employeeData %>% ggplot(mapping = aes(x = StockOptionLevel, fill = Attrition)) + geom_bar(position = "dodge")+ labs(title="Comparing Options On Current/Former Employees", y = "Employee Count", x="Stock Options" ) + geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)
+
+empL = empL %>% mutate(deptx = factor(empL$Department, levels = c("Research & Development","Sales","Human Resources")))
+
+#1 Attrition due to Stock Options Dept Graphs
+empL %>% ggplot(aes(x=StockOptionLevel, fill=deptx)) +
+  geom_histogram(stat='count') + labs(title="Stock Options By Dept", y = "Employee Count", x="Stock Options", fill="Department") +geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)
+
+#Compare with existing employees
+employeeData %>% ggplot(mapping = aes(x = StockOptionLevel, y=, fill = Department)) + geom_bar(position = "dodge")+ labs(title="Comparing Options On Current/Former Employees By Dept", y = "Employee Count", x="Stock Options" )+geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)+
+    facet_wrap(~Attrition) 
+
+#1 Attrition due to Stock Options by Field Graphs
+empL %>% ggplot(aes(x=StockOptionLevel, fill=EducationField)) +
+  geom_histogram(stat='count') + labs(title="Stock Options By Education Field", y = "Employee Count", x="Stock Options" )
+
+#Compare with existing employees
+employeeData %>% ggplot(mapping = aes(x = StockOptionLevel,  fill = EducationField)) + geom_bar(position = "dodge")+ labs(title="Comparing Options On Current/Former Employees By Field", y = "Employee Count", x="Stock Options" )+geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)+
+    facet_wrap(~Attrition) 
+
+#Statistical significance Analyze mean difference for stock option for eductioan fields/Dept
+
+#Prepare dataframes
+emlLLS = empL %>% filter(EducationField=="Life Sciences")
+emlWLS = empW %>%  filter(EducationField=="Life Sciences")
+
+emlLR = empL %>% filter(Department=="Research & Development")
+emlWR = empW %>%  filter(Department=="Research & Development")
+
+#t.test for ovwe all difference in means of stock options offered Current/Former Emp
+t.test(empW$StockOptionLevel,empL$StockOptionLevel)
+
+#t.test for Life Science difference in means of stock options offered Current/Former Emp
+t.test(emlWLS$StockOptionLevel,emlLLS$StockOptionLevel)
+
+#t.test for R&D difference in means of stock options offered Current/Former Emp
+t.test(emlWR$StockOptionLevel,emlLR$StockOptionLevel)
+
+#Factor 2 Investigate Income impact on attrition
+
+#Plot income gap for employees left by department
+empL %>% filter(ppayd < 100) %>% ggplot(aes(x=ppayd, fill=Department)) +
+  geom_histogram() +  labs(title="Pay Gap Distribution Per Deparment", y = "Employee Count", x="Percent Pay Gap Against Monthly Rate" )
+
+#Compare income gap with existing employees
+employeeData %>% filter(ppayd < 100) %>% ggplot(aes(x = bpayd, fill = Department)) + geom_bar(position = "dodge")+ labs(title="Percent Pay Gap Against Monthly Rate By Dept", y = "Employee Count", x="Pay Gap" )+
+    facet_wrap(~Attrition) 
+
+#Plot income gap for employees left by Field
+empL %>% filter(ppayd < 100) %>% ggplot(aes(x=ppayd, fill=EducationField)) +
+  geom_histogram() +  labs(title="Pay Gap Distribution Per Field", y = "Employee Count", x="Percent Pay Gap Against Monthly Rate" )
+
+#Compare income gap with existing employees
+employeeData %>% filter(ppayd < 100) %>% ggplot(aes(x = bpayd, fill = EducationField)) + geom_bar(position = "dodge")+ labs(title="Percent Pay Gap Against Monthly Rate By Field", y = "Employee Count", x="Pay Gap" )+
+    facet_wrap(~Attrition) 
+
+#Compare income gap with existing employees
+employeeData %>% ggplot(mapping = aes(x = bpayd, fill = Attrition)) + geom_bar(position = "dodge")+ labs(title="Comparing Options On Current/Former Employees", y = "Employee Count", x="Stock Options" ) + geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)
+
+#Statistical significance Analyze mean difference for pay for eductioan fields/Dept
+#t.test for three categories 
+
+#Income gap mean difference for over all current and past employees
+t.test(empW$ppayd,empL$ppayd)
+
+#Income gap mean difference for Life Science Field current and past employees
+t.test(emlWLS$ppayd,emlLLS$ppayd)
+
+#Income gap mean difference for R&D dept current and past employees
+t.test(emlWR$ppayd,emlLR$ppayd)
+
+# Attrition Factor #3
+empL %>% ggplot(aes(x=JobLevel, fill=bwy)) +
+  geom_histogram(stat='count') + labs(title="Level 1 Job / Total Working Years", y = "Employee Count", x="Job Level" , fill="Working Yrs") + geom_text(aes(label = scales::percent((..count..)/sum(..count..)) ), stat="count", vjust = -.25)
+
+empL %>% ggplot(aes(x=JobLevel, fill=EducationField)) +
+  geom_histogram(stat='count') + labs(title="Level 1 Job / Total Working Years", y = "Employee Count", x="Job Level" , fill="Fields") 
+
+#Classification Analysis
+#Get the best k using cv
+k = tuneK(cv=1,numksF =1, numksT =20, iterations=10, splitPerc=.80, employeeData,
+          c('ppayd','EnvironmentSatisfaction', 'Age','WorkLifeBalance',
+           'JobInvolvement','JobLevel', 'JobSatisfaction',
+           'PercentSalaryHike','YearsAtCompany','JobInvolvement',
+           'YearsWithCurrManager', 'YearsSinceLastPromotion',  
+           'TotalWorkingYears', 'StockOptionLevel','TrainingTimesLastYear',
+                                'RelationshipSatisfaction', 'YearsInCurrentRole'), Attrition, plot = TRUE)
+
+# Check Knn statistics
+checkKnnAccuracy(1, 100, employeeData, 
+                 c('ppayd','EnvironmentSatisfaction', 'Age','WorkLifeBalance',
+                       'JobInvolvement','JobLevel',
+                   'JobSatisfaction','PercentSalaryHike','YearsAtCompany',
+                   'JobInvolvement','YearsWithCurrManager',
+                    'YearsSinceLastPromotion',  'TotalWorkingYears', 
+                     'StockOptionLevel','TrainingTimesLastYear',
+                     'RelationshipSatisfaction', 'YearsInCurrentRole'),
+                 Attrition)
+
+#Chek NaievBayes Accuracy
+checkNBAccuracy(100, 0.8, employeeData,  c('ppayd','EnvironmentSatisfaction','OverTime',
+                          'Age', 'WorkLifeBalance', 'JobInvolvement', 'JobLevel',
+                              'JobRole','JobSatisfaction','PercentSalaryHike',
+                              'YearsAtCompany','JobInvolvement', 
+                                  'YearsWithCurrManager',
+                                  'YearsSinceLastPromotion',  'TotalWorkingYears', 
+                                'StockOptionLevel',
+                                 'YearsInCurrentRole'), Attrition)
+
+#Check Random Forestt Accuracy
+p = checkRandomForest(employeeData, Attrition ~ ppayd+StockOptionLevel+TotalWorkingYears
+                      +YearsAtCompany+JobLevel)
+```
+
+# Use Random Forest to classify Attrition data
+```{r}
+# Add requred columns to classify 
+testEmpDataAttr = fixData(testEmpDataAttr)
+
+#Build the Random forest model
+model <- randomForest(Attrition ~ ppayd+StockOptionLevel+TotalWorkingYears
+                      +YearsAtCompany+JobLevel,
+                              data = employeeData)
+#Predict using test Data
+p = predict(model, newdata = testEmpDataAttr)
+
+
+#Export classified file
+out = cbind.data.frame(ID = testEmpDataAttr$ID,Attrition=p, stringsAsFactors = TRUE)
+write_csv(out, "Case2PredictionsSanjayPillayAttrition.csv",append = FALSE)
+```
+
+# Model to predict Salary
+```{r}
+#Plot corelation matrix for inspections of relationshipa
+pairs(~MonthlyIncome+JobLevel+TotalWorkingYears+ JobRole 
+      ,data=employeeData,
+      main="Simple Scatterplot Matrix")
+
+#Investigate Corelation
+cor.test(employeeData$MonthlyIncome, employeeData$JobLevel)
+cor.test(employeeData$MonthlyIncome, employeeData$TotalWorkingYears)
+
+
+#Lets investigate reidual plots for the model
+fit2 = lm(MonthlyIncome~JobLevel+TotalWorkingYears +JobRole , data = employeeData)
+par(mfrow = c(2, 2))
+plot(fit2)
+summary(fit2)
+
+#Build the Linear model and validate using leave one out cross validations 
+model = train(MonthlyIncome~JobLevel+TotalWorkingYears +JobRole, method = "lm", data = employeeData, trControl = trainControl(method = "LOOCV"))
+
+# RMSE for the model
+model$results["RMSE"]
+
+#testEmpDataSal = fixData(testEmpDataSal)
+#Predict the test dataset
+p = predict(model, newdata = testEmpDataSal)
+p = as.integer(p)
+#Expor the predicted values
+out= cbind.data.frame(ID=testEmpDataSal$ID, MonthlyIncome=p)
+write_csv(out, "Case2PredictionsSanjayPillaySalary.csv",append = FALSE)
+
+```
+
+
+
