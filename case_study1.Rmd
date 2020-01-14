@@ -11,6 +11,14 @@ title: "Case Study 1"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# Introduction
+The case study involves a exploratory data analysis of breweries and the beer they manufacture in all the states of US. The study finally ends with some recommendations for the study sponsores (CEO and CFO of Budweiser) as to where to target their next product and the reasoning behind those recommendations.
+
+# Video Presentation
+https://youtu.be/gfOp74IlmpQ
+
+# Shinny App
+https://dds-app1.shinyapps.io/shinnyunit12/
 
 Importing Libraries
 ```{r message=FALSE}

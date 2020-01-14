@@ -1,14 +1,16 @@
 name: "Sanjay Pillay"
 output_dir: "."
 navbar:
-  title: "Sanjay Pillay!"
+  title: "Sanjay Pillay!!"
   left:
     - text: "This Is Me"
       href: index.html
     - text: "Brewries A Case Study"
       href: case_study1.html
     - text: "Talent Mgmt Case Study"
-      href: case_study2.html      
+      href: case_study2.html    
+    - text: "Stat MidTerm Proj"
+      href: groupproj.pdf   
   right:
     - icon: fa-github fa-lg
       href: https://github.com/sdpillay/dds_casestudy2

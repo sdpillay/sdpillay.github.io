@@ -42,7 +42,7 @@ pre { /* Code block - determines code spacing between lines */
     font-size: 14px;
 }
 </style>
-
+#  Site updates in progress with ongoing assignments of Masters Program
 <img src="images/sanjay.jpg" style="width:25%; border:10px solid; margin-right: 20px" align="left">In the community I mentor and support scouts to build on their life skills. I volunteers at various events as Archery Range Officer and other community events/fundraisers for non-profit organizations.
 
  
