@@ -5,12 +5,16 @@ navbar:
   left:
     - text: "This Is Me"
       href: index.html
+    - text: "ML-Lab2(Modeling)"
+      href: oLab2-team-pmsj.html   
+    - text: "ML-Lab1(DataPrep)"
+      href: olab1_team_pms.html    
+    - text: "Stats"
+      href: stats.html 
     - text: "Brewries A Case Study"
       href: case_study1.html
     - text: "Talent Mgmt Case Study"
       href: case_study2.html    
-    - text: "Stat MidTerm Proj"
-      href: groupproj.pdf   
   right:
     - icon: fa-github fa-lg
       href: https://github.com/sdpillay/dds_casestudy2

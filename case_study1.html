@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -235,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -278,13 +278,13 @@ $(document).ready(function () {
   <a href="index.html">This Is Me</a>
 </li>
 <li>
+  <a href="Lab2.html">ML-Lab2</a>
+</li>
+<li>
   <a href="case_study1.html">Brewries A Case Study</a>
 </li>
 <li>
   <a href="case_study2.html">Talent Mgmt Case Study</a>
-</li>
-<li>
-  <a href="groupproj.pdf">Stat MidTerm Proj</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -372,22 +372,14 @@ marginplot(beerData[c(&#39;IBU&#39;,&#39;ABV&#39;)])</code></pre>
 <p><img src="case_study1_files/figure-html/unnamed-chunk-2-3.png" width="768" /></p>
 <pre class="r"><code>#Summary data
 summary(brewwriesData)</code></pre>
-<pre><code>##     Brew_ID                           Name           City    
-##  Min.   :  1.0   Blackrocks Brewery     :  2   Portland: 17  
-##  1st Qu.:140.2   Blue Mountain Brewery  :  2   Boulder :  9  
-##  Median :279.5   Lucette Brewing Company:  2   Chicago :  9  
-##  Mean   :279.5   Oskar Blues Brewery    :  2   Seattle :  9  
-##  3rd Qu.:418.8   Otter Creek Brewing    :  2   Austin  :  8  
-##  Max.   :558.0   Sly Fox Brewing Company:  2   Denver  :  8  
-##                  (Other)                :546   (Other) :498  
-##      State    
-##   CO    : 47  
-##   CA    : 39  
-##   MI    : 32  
-##   OR    : 29  
-##   TX    : 28  
-##   PA    : 25  
-##  (Other):358</code></pre>
+<pre><code>##     Brew_ID                           Name           City         State    
+##  Min.   :  1.0   Blackrocks Brewery     :  2   Portland: 17    CO    : 47  
+##  1st Qu.:140.2   Blue Mountain Brewery  :  2   Boulder :  9    CA    : 39  
+##  Median :279.5   Lucette Brewing Company:  2   Chicago :  9    MI    : 32  
+##  Mean   :279.5   Oskar Blues Brewery    :  2   Seattle :  9    OR    : 29  
+##  3rd Qu.:418.8   Otter Creek Brewing    :  2   Austin  :  8    TX    : 28  
+##  Max.   :558.0   Sly Fox Brewing Company:  2   Denver  :  8    PA    : 25  
+##                  (Other)                :546   (Other) :498   (Other):358</code></pre>
 <pre class="r"><code>summary(beerData)</code></pre>
 <pre><code>##                      Name         Beer_ID            ABV         
 ##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100  
@@ -491,20 +483,20 @@ head(beerBrewries,6)</code></pre>
 ## 4          1       Pumpion    2689 0.060  38
 ## 5          1    Stronghold    2688 0.060  25
 ## 6          1   Parapet ESB    2687 0.056  47
-##                                 Style Ounces             Name.y
-## 1                        American IPA     16 NorthGate Brewing 
-## 2                  Milk / Sweet Stout     16 NorthGate Brewing 
-## 3                   English Brown Ale     16 NorthGate Brewing 
-## 4                         Pumpkin Ale     16 NorthGate Brewing 
-## 5                     American Porter     16 NorthGate Brewing 
-## 6 Extra Special / Strong Bitter (ESB)     16 NorthGate Brewing 
-##          City State
-## 1 Minneapolis    MN
-## 2 Minneapolis    MN
-## 3 Minneapolis    MN
-## 4 Minneapolis    MN
-## 5 Minneapolis    MN
-## 6 Minneapolis    MN</code></pre>
+##                                 Style Ounces             Name.y        City
+## 1                        American IPA     16 NorthGate Brewing  Minneapolis
+## 2                  Milk / Sweet Stout     16 NorthGate Brewing  Minneapolis
+## 3                   English Brown Ale     16 NorthGate Brewing  Minneapolis
+## 4                         Pumpkin Ale     16 NorthGate Brewing  Minneapolis
+## 5                     American Porter     16 NorthGate Brewing  Minneapolis
+## 6 Extra Special / Strong Bitter (ESB)     16 NorthGate Brewing  Minneapolis
+##   State
+## 1    MN
+## 2    MN
+## 3    MN
+## 4    MN
+## 5    MN
+## 6    MN</code></pre>
 <pre class="r"><code>tail(beerBrewries,6)</code></pre>
 <pre><code>##      Brewery_id                    Name.x Beer_ID   ABV IBU
 ## 2405        556             Pilsner Ukiah      98 0.055  35
@@ -513,20 +505,20 @@ head(beerBrewries,6)</code></pre>
 ## 2408        557         Moo Thunder Stout      50 0.049  15
 ## 2409        557         Porkslap Pale Ale      49 0.043  42
 ## 2410        558 Urban Wilderness Pale Ale      30 0.049  42
-##                        Style Ounces                        Name.y
-## 2405         German Pilsener     12         Ukiah Brewing Company
-## 2406              Hefeweizen     12       Butternuts Beer and Ale
-## 2407            American IPA     12       Butternuts Beer and Ale
-## 2408      Milk / Sweet Stout     12       Butternuts Beer and Ale
-## 2409 American Pale Ale (APA)     12       Butternuts Beer and Ale
-## 2410        English Pale Ale     12 Sleeping Lady Brewing Company
-##               City State
-## 2405         Ukiah    CA
-## 2406 Garrattsville    NY
-## 2407 Garrattsville    NY
-## 2408 Garrattsville    NY
-## 2409 Garrattsville    NY
-## 2410     Anchorage    AK</code></pre>
+##                        Style Ounces                        Name.y          City
+## 2405         German Pilsener     12         Ukiah Brewing Company         Ukiah
+## 2406              Hefeweizen     12       Butternuts Beer and Ale Garrattsville
+## 2407            American IPA     12       Butternuts Beer and Ale Garrattsville
+## 2408      Milk / Sweet Stout     12       Butternuts Beer and Ale Garrattsville
+## 2409 American Pale Ale (APA)     12       Butternuts Beer and Ale Garrattsville
+## 2410        English Pale Ale     12 Sleeping Lady Brewing Company     Anchorage
+##      State
+## 2405    CA
+## 2406    NY
+## 2407    NY
+## 2408    NY
+## 2409    NY
+## 2410    AK</code></pre>
 <pre class="r"><code>## Media Alcohol/Bitterness for each state
 abByState = beerBrewries %&gt;% group_by(State) %&gt;% summarize(medianIBU = median(IBU), medianABV = median(ABV))
 abByState = abByState %&gt;% mutate(Bitterness = &#39;Middle&#39;) 
